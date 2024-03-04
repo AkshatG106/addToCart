@@ -27,9 +27,9 @@ const CartPage = () => {
 
   const showToast = () => {
     toastProperties = {
-      id: 2,
-      title: "Danger",
-      description: "this is danger",
+      id: list.length,
+      title: "",
+      description: "Item Removed from the Cart",
       backgroundColor: "#d9534f",
     };
     setList([toastProperties]);
@@ -55,7 +55,7 @@ const CartPage = () => {
                           data-mdb-ripple-color="light"
                         >
                           <img
-                            src={data.image}
+                            src={data.thumbnail}
                             className="w-[200px] h-[200px]"
                             alt="Blue Jeans Jacket"
                           />
@@ -123,7 +123,7 @@ const CartPage = () => {
                         </div>
 
                         <p className="text-start text-md-center bg-primary w-[90px] text-white rounded-full">
-                          <strong>${data.price}</strong>
+                          <strong>$.{data.price}</strong>
                         </p>
                       </div>
                     </div>

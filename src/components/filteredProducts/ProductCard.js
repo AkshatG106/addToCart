@@ -9,33 +9,34 @@ import {
   MDBRow,
   MDBCol,
 } from "mdb-react-ui-kit";
-import { useDispatch,useSelector } from "react-redux";
-import { addToCart } from "../features/cartSlice";
-import Button from "./button/Button";
-import Toast from "./toast/Toast";
-import { fetchApiData } from "../features/apiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../features/cartSlice";
+import Button from "../button/Button";
+import Toast from "../toast/Toast";
+import { fetchApiData } from "../../features/apiSlice";
+import { Link, useParams } from "react-router-dom";
 
+export const ProductCard = ({ id, title, img, price, product }) => {
 
-export default function ProductCart() {
   const dispatch = useDispatch();
+
+  // const { filteredProducts } = useSelector((state) => state.products);
+  const { loading, error, data: products } = useSelector((state) => state.api);
+  const { type } = useParams();
+
 
   const [list, setList] = useState([]);
   let toastProperties = null;
 
-  // const { filteredProducts } = useSelector((state) => state.products);
-  const { loading, error, data: products } = useSelector((state) => state.api);
-
   const showToast = () => {
     toastProperties = {
-      id: 1,
+      id: list.length,
       title: "Success",
-      description: "this is success",
+      description: "Item Added to the Cart",
       backgroundColor: "#5cb85c",
     };
     setList([toastProperties]);
   };
-
-//   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     if(!products.length){
@@ -53,24 +54,24 @@ export default function ProductCart() {
 
   return (
     <div>
-      <MDBContainer className="">
-        <MDBRow className="mb-3">
-          {products.map((item) => (
-            <MDBCol size="3" className="mt-5" key={item.id}>
-              <MDBCard className="rounded-[5px]">
+      <Link to={`/filteredProducts/${type}/` + id}>
+        <MDBContainer className="">
+          <MDBRow className="mb-3">
+            <MDBCol size="" className="mt-5" key={id}>
+              <MDBCard className="">
                 <MDBCardImage
                   className="w-[300px] h-[300px] rounded-[5px]"
-                  src={item.thumbnail}
+                  src={img}
                   alt="..."
                 />
                 <MDBCardBody className="h-[300px]">
                   <div className="w-[250px] h-[150px]">
-                    <MDBCardTitle>{item.title}</MDBCardTitle>
-                    <MDBCardText>$.{item.price}</MDBCardText>
+                    <MDBCardTitle>{title}</MDBCardTitle>
+                    <MDBCardText>$.{price}</MDBCardText>
                   </div>
                   <div>
                     <Button>
-                      <p className="bg-primary w-[250px] mt-3 p-1 rounded-[5px] text-white">
+                      <p className="bg-primary w-[250px] p-1 rounded-[5px] text-white">
                         Buy
                       </p>
                     </Button>
@@ -78,8 +79,8 @@ export default function ProductCart() {
                   <div>
                     <Button handleClick={() => showToast()}>
                       <button
-                        onClick={() => dispatch(addToCart(item))}
-                        className="bg-primary w-[250px] mt-3 p-1 rounded-[5px] text-white"
+                        onClick={() => dispatch(addToCart())}
+                        className="bg-primary w-[250px] p-1 rounded-[5px] text-white"
                       >
                         Add to cart
                       </button>
@@ -88,10 +89,12 @@ export default function ProductCart() {
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
-          ))}
-        </MDBRow>
-      </MDBContainer>
-      <Toast toastList={list} setList={setList} />
+          </MDBRow>
+        </MDBContainer>
+        <Toast toastList={list} setList={setList} />
+      </Link>
     </div>
   );
-}
+};
+
+export default ProductCard;
